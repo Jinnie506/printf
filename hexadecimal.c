@@ -1,7 +1,6 @@
 #include "holberton.h"
 #include <stdlib.h>
 #include <stdarg.h>
-#include <stdio.h>
 /**
  *_hex_str - print an hexadecimal munber
  *@alpha: argument
@@ -48,38 +47,4 @@ int _hex_l(va_list hexa)
 int _hex_u(va_list hexa)
 {
 	return (_hex_str(va_arg(hexa, unsigned int), 16, 'A'));
-}
-/**
- *OctCase - Prints Octal number
- *@arg: argument
- *Return: int
- */
-int OctCase(va_list arg)
-{
-	unsigned int n = va_arg(arg, unsigned int), Aux = n;
-	int cnt = 0, i, *MyArr;
-
-	while (n / 8 != 0)
-	{
-		n = n / 8;
-		cnt++;
-	}
-	cnt++;
-	MyArr = malloc(cnt * sizeof(int));
-	if (MyArr == NULL)
-	{
-		free(MyArr);
-		return (0);
-	}
-	for (i = 0; i < cnt; i++)
-	{
-		MyArr[i] = Aux % 8;
-		Aux = Aux / 8;
-	}
-	for (i = cnt - 1; i >= 0; i--)
-	{
-		_putchar(MyArr[i] + '0');
-	}
-	free(MyArr);
-	return (0);
 }
