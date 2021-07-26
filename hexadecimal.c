@@ -1,50 +1,130 @@
 #include "holberton.h"
-#include <stdlib.h>
-#include <stdarg.h>
-/**
- *_hex_str - print an hexadecimal munber
- *@alpha: argument
- *@n: n
- *@hex: hexadecimal
- *Return: hexadecimal
- */
-int _hex_str(unsigned int n, unsigned int hex, char alpha)
-{
-	unsigned int a = n % hex;
-	unsigned int b = n / hex;
-	char c;
 
-	if (a > 10)
-		c = (a - 10) + alpha;
+/**
+ * print_hex - prints an unsigned int in hexidecimal form
+ * @n: unsigned int to print
+ * @c: flag to determine case of printing (0 = lower, 1 = upper)
+ *
+ * Return: number of digits printed
+ */
+int print_hex(unsigned int n, unsigned int c)
+{
+	unsigned int a[8];
+	unsigned int i, m, sum;
+	char diff;
+	int count;
+
+	m = 268435456; /* (16 ^ 7) */
+	if (c)
+		diff = 'A' - ':';
 	else
-		c = a + '0';
-	if (b == 0)
+		diff = 'a' - ':';
+	a[0] = n / m;
+	for (i = 1; i < 8; i++)
 	{
-		return (_putchar(c));
+		m /= 16;
+		a[i] = (n / m) % 16;
 	}
-	if (b < hex)
+	for (i = 0, sum = 0, count = 0; i < 8; i++)
 	{
-		if (b > 10)
-			return (_putchar(b - 10 + alpha) + _putchar(c));
-		return (_putchar(b + '0') + _putchar(c));
+		sum += a[i];
+		if (sum || i == 7)
+		{
+			if (a[i] < 10)
+				_putchar('0' + a[i]);
+			else
+				_putchar('0' + diff + a[i]);
+			count++;
+		}
 	}
-	return (_hex_str(b, hex, alpha) + _putchar(c));
+	return (count);
 }
 /**
- *_hex_l - prints hexa in lowercase
- *@hexa: argument
- *Return: hexadecimal in lower case
+ * print_x - takes an unsigned int and prints it in lowercase hex notation
+ * @x: unsigned int to print
+ *
+ * Return: number of digits printed
  */
-int _hex_l(va_list hexa)
+int print_x(va_list x)
 {
-	return (_hex_str(va_arg(hexa, unsigned int), 16, 'a'));
+	return (print_hex(va_arg(x, unsigned int), 0));
 }
+
 /**
- *_hex_u - prints hexadecimal in uppercase
- *@hexa: argument
- *Return: hexadecimal in uppercase
+ * print_X - takes am unsigned int and prints it in uppercase hex notation
+ * @X: unsigned int to print
+ *
+ * Return: number of digits printed
  */
-int _hex_u(va_list hexa)
+int print_X(va_list X)
 {
-	return (_hex_str(va_arg(hexa, unsigned int), 16, 'A'));
+	return (print_hex(va_arg(X, unsigned int), 1));
+}
+
+/**
+ * _pow - calculates an exponent
+ * @base: base of exponent
+ * @exponent: exponent of number
+ *
+ * Return: base ^ exponent
+ */
+static unsigned long _pow(unsigned int base, unsigned int exponent)
+{
+	unsigned int i;
+	unsigned long ans = base;
+
+	for (i = 1; i < exponent; i++)
+	{
+		ans *= base;
+	}
+	return (ans);
+}
+
+/**
+ * print_p - prints an address
+ * @p: address to print
+ *
+ * Return: number of characters to print
+ */
+int print_p(va_list p)
+{
+	int count = 0;
+	unsigned int a[16];
+	unsigned int i, sum;
+	unsigned long n, m;
+	char *str = "(nil)";
+
+	n = va_arg(p, unsigned long);
+	if (n == 0)
+	{
+		for (i = 0; str[i]; i++)
+		{
+			_putchar(str[i]);
+			count++;
+		}
+		return (count);
+	}
+	_putchar('0');
+	_putchar('x');
+	count = 2;
+	m = _pow(16, 15); /* 16 ^ 15 */
+	a[0] = n / m;
+	for (i = 1; i < 16; i++)
+	{
+		m /= 16;
+		a[i] = (n / m) % 16;
+	}
+	for (i = 0, sum = 0; i < 16; i++)
+	{
+		sum += a[i];
+		if (sum || i == 15)
+		{
+			if (a[i] < 10)
+				_putchar('0' + a[i]);
+			else
+				_putchar('0' + ('a' - ':') + a[i]);
+			count++;
+		}
+	}
+	return (count);
 }

@@ -1,32 +1,39 @@
 #include "holberton.h"
-/**
- *rooot13 - root13
- *@arg: argument
- *Return: int
- */
-int rooot13(va_list arg)
-{
-	int Y, count;
-	char *MyArr;
+#include <stdlib.h>
 
-	Y = count = 0;
-	MyArr = va_arg(arg, char *);
-	if (MyArr == NULL)
-	{return (-1); }
-	while (MyArr[Y] != '\0')
+/**
+ * print_R - prints a string in rot13
+ * @R: string to print
+ *
+ * Return: number of chars printed
+ */
+int print_R(va_list R)
+{
+	char *str;
+	unsigned int i, j;
+	int count = 0;
+	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+
+	str = va_arg(R, char *);
+	if (str == NULL)
+		str = "(ahyy)";
+	for (i = 0; str[i]; i++)
 	{
-		if ((MyArr[Y] >= 'a' && MyArr[Y] <= 'z') ||
-		    (MyArr[Y] >= 'A' && MyArr[Y] <= 'Z'))
+		for (j = 0; in[j]; j++)
 		{
-			if ((MyArr[Y] >= 'n' && MyArr[Y] <= 'z') ||
-			    (MyArr[Y] >= 'N' && MyArr[Y] <= 'Z'))
-			{count += _putchar(MyArr[Y] - 13); }
-			else
-			{count += _putchar(MyArr[Y] + 13); }
+			if (in[j] == str[i])
+			{
+				_putchar(out[j]);
+				count++;
+				break;
+			}
 		}
-		else
-		{count += _putchar(MyArr[Y]); }
-		Y++;
+		if (!in[j])
+		{
+			_putchar(str[i]);
+			count++;
+		}
 	}
 	return (count);
 }

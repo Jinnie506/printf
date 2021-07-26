@@ -1,37 +1,32 @@
-#ifndef HOLBERTON_H
-#define HOLBERTON_H
+#ifndef _HOLBERTON_H_
+#define _HOLBERTON_H_
+
 #include <stdarg.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 /**
- *struct print - structure for conversion
- *@print: print
- *@f: pointer to function
- *return: int
+ * struct print - structure for printing various types
+ * @t: type to print
+ * @f: function to print
  */
 typedef struct print
 {
-	char *print;
-	int (*f)();
-} print_type;
+	char *t;
+	int (*f)(va_list);
+} print_t;
 
-int _printf(const char *format, ...);
-int print_op(const char *format, print_type *print_arr, va_list arg);
 int _putchar(char c);
+int _printf(const char *format, ...);
+int print_c(va_list c);
+int print_s(va_list s);
+int print_i(va_list i);
+int print_d(va_list d);
+int print_u(va_list u);
+int print_b(va_list b);
+int print_o(va_list o);
+int print_x(va_list x);
+int print_X(va_list X);
+int print_p(va_list p);
+int print_S(va_list S);
+int print_r(va_list r);
+int print_R(va_list R);
 
-int CharacterCase(va_list arg);
-int StringCase(va_list arg);
-int DecimalCase(va_list arg);
-int IntegerCase(va_list arg);
-
-int OctCase(va_list arg);
-int UnsignedCase(va_list arg);
-int binaryNum(va_list arg);
-int rooot13(va_list arg);
-int _hex_str(unsigned int n, unsigned int hex, char alpha);
-int _hex_l(va_list arg);
-int _hex_u(va_list arg);
-
-#endif
+#endif  /* _HOLBERTON_H */

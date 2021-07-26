@@ -1,70 +1,82 @@
 #include "holberton.h"
-/**
- *print_op - Check the specifier to print
- *@format: string passed
- *@print_arr: array
- *@arg: list of arguments to print
- *Return: number
- */
-int print_op(const char *format, print_type *print_arr, va_list arg)
-{
-	int count = 0, i = 0, j = 0;
-
-	while (format[i] != '\0')
-	{
-		if (format[i] == '%')
-		{
-			j = 0;
-			i++;
-			while (print_arr[j].print != NULL &&
-			       format[i] != *(print_arr[j].print))
-			{j++; }
-			if (print_arr[j].print != NULL)
-			{count = count + print_arr[j].f(arg); }
-			else
-			{
-				if (format[i] == '\0')
-				{return (-1); }
-				if (format[i] != '%')
-				{count += _putchar('%'); }
-				count += _putchar(format[i]);
-			}
-		}
-		else
-		{count += _putchar(format[i]); }
-		i++;
-	}
-	return (count);
-}
+#include <stdlib.h>
 
 /**
- *_printf - Prints output according to format
- *@format: string being passed
- *Return: char
+ * check_for_specifiers - checks if there is a valid format specifier
+ * @format: possible format specifier
+ *
+ * Return: pointer to valid function or NULL
  */
-int _printf(const char *format, ...)
+static int (*check_for_specifiers(const char *format))(va_list)
 {
-	va_list arg;
-	int a;
-
-	print_type ops[] = {
-		{"c", CharacterCase},
-		{"s", StringCase},
-		{"d", DecimalCase},
-		{"i", IntegerCase},
-		{"u", UnsignedCase},
-		{"o", OctCase},
-		{"b", binaryNum},
-		{"R", rooot13},
-		{"x", _hex_l},
-		{"X", _hex_u},
+	unsigned int i;
+	print_t p[] = {
+		{"c", print_c},
+		{"s", print_s},
+		{"i", print_i},
+		{"d", print_d},
+		{"u", print_u},
+		{"b", print_b},
+		{"o", print_o},
+		{"x", print_x},
+		{"X", print_X},
+		{"p", print_p},
+		{"S", print_S},
+		{"r", print_r},
+		{"R", print_R},
 		{NULL, NULL}
 	};
 
+	for (i = 0; p[i].t != NULL; i++)
+	{
+		if (*(p[i].t) == *format)
+		{
+			break;
+		}
+	}
+	return (p[i].f);
+}
+
+/**
+ * _printf - prints anything
+ * @format: list of argument types passed to the function
+ *
+ * Return: number of characters printed
+ */
+int _printf(const char *format, ...)
+{
+	unsigned int i = 0, count = 0;
+	va_list valist;
+	int (*f)(va_list);
+
 	if (format == NULL)
-	{return (-1); }
-	va_start(arg, format);
-	a = print_op(format, ops, arg);
-	va_end(arg);
-	return (a);
+		return (-1);
+	va_start(valist, format);
+	while (format[i])
+	{
+		for (; format[i] != '%' && format[i]; i++)
+		{
+			_putchar(format[i]);
+			count++;
+		}
+		if (!format[i])
+			return (count);
+		f = check_for_specifiers(&format[i + 1]);
+		if (f != NULL)
+		{
+			count += f(valist);
+			i += 2;
+			continue;
+		}
+		if (!format[i + 1])
+			return (-1);
+		_putchar(format[i]);
+		count++;
+		if (format[i + 1] == '%')
+			i += 2;
+		else
+			i++;
+	}
+	va_end(valist);
+	return (count);
 }
